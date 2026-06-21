@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic Swarms — OWA Architecture for Cost-Optimized Coding</title>
+<style>
+:root{
+--bg:#0a0c0f;--bg-elev:#111316;--bg-card:#181b20;--bg-deep:#0f1216;
+--border:#252a32;--border-sub:#1f242c;
+--text:#e4e7eb;--text-sec:#9ca3af;--text-mut:#6b7280;
+--blue:#3b82f6;--blue-light:#60a5fa;
+--green:#10b981;--green-light:#34d399;
+--red:#ef4444;--red-light:#f87171;
+--amber:#f59e0b;--cyan:#06b6d4;--purple:#a78bfa;
+--shadow:0 10px 30px rgba(0,0,0,0.5);
+--radius:12px;--radius-sm:8px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro","Inter",system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased;font-size:16px;overflow-x:hidden}
+.nav{position:fixed;top:0;left:0;right:0;height:64px;background:rgba(10,12,15,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 32px;z-index:100}
+.nav .logo{font-size:1.25rem;font-weight:700;letter-spacing:-0.03em}
+.nav .logo span{color:var(--blue-light)}
+.nav .links{display:flex;gap:24px}
+.nav .links a{color:var(--text-sec);text-decoration:none;font-size:0.85rem;font-weight:500;transition:color .15s}
+.nav .links a:hover{color:var(--text)}
+.nav .meta{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:0.72rem;color:var(--text-mut)}
+.hero{padding:130px 32px 60px;max-width:1100px;margin:0 auto;text-align:center}
+.hero h1{font-size:3.6rem;font-weight:800;letter-spacing:-0.045em;line-height:1.05;margin-bottom:20px}
+.hero .tag{font-size:1.3rem;color:var(--text-sec);max-width:720px;margin:0 auto 32px;line-height:1.4}
+.hero .premise{display:inline-flex;align-items:center;gap:12px;background:var(--bg-card);border:1px solid var(--border);padding:10px 22px;border-radius:999px;font-size:0.92rem;color:var(--text-sec)}
+.hero .premise strong{color:var(--text)}
+.visual{max-width:1100px;margin:0 auto 70px;padding:0 32px}
+.visual .label{text-align:center;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-mut);margin-bottom:16px}
+.section{max-width:1000px;margin:0 auto 80px;padding:0 32px}
+.section h2{font-size:1.85rem;font-weight:700;letter-spacing:-0.025em;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.section h3{font-size:1.15rem;font-weight:600;margin:32px 0 12px;color:var(--text)}
+.section p,.section li{color:var(--text-sec);margin-bottom:14px}
+.section ul{padding-left:22px}
+.section li{margin-bottom:8px}
+.lead{font-size:1.1rem;color:var(--text);max-width:780px}
+.arch-svg{width:100%;max-width:980px;height:auto;display:block;margin:0 auto;filter:drop-shadow(0 20px 40px rgba(0,0,0,0.45))}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin:28px 0}
+.metric{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;text-align:center;transition:transform .2s,border-color .2s}
+.metric:hover{transform:translateY(-3px);border-color:var(--blue)}
+.metric .num{font-size:1.9rem;font-weight:700;font-family:ui-monospace,monospace;line-height:1;margin-bottom:6px}
+.metric .label{font-size:0.78rem;color:var(--text-mut);text-transform:uppercase;letter-spacing:0.06em}
+.metric .sub{font-size:0.72rem;color:var(--text-mut);margin-top:4px}
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin:24px 0}
+.agent-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;transition:border-color .15s,transform .15s;cursor:pointer}
+.agent-card:hover{border-color:var(--blue);transform:translateY(-2px)}
+.agent-card .role{font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;margin-bottom:8px}
+.agent-card .role.orchestrator{color:var(--blue)}
+.agent-card .role.worker{color:var(--green)}
+.agent-card .role.adversary{color:var(--red)}
+.agent-card .role.verifier{color:var(--purple)}
+.agent-card h4{font-size:1.05rem;font-weight:600;margin-bottom:4px}
+.agent-card .cost{font-family:ui-monospace,monospace;font-size:0.76rem;color:var(--text-mut);margin-bottom:8px}
+.agent-card p{font-size:0.86rem;color:var(--text-sec);margin:0;line-height:1.5}
+.flow{background:var(--bg-deep);border:1px solid var(--border);border-radius:var(--radius);padding:32px;margin:32px 0}
+.flow-step{display:flex;gap:20px;align-items:flex-start;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border-sub)}
+.flow-step:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.flow-step .num{font-family:ui-monospace,monospace;font-size:0.8rem;font-weight:700;color:var(--blue);background:rgba(59,130,246,0.1);padding:4px 10px;border-radius:6px;min-width:28px;text-align:center;flex-shrink:0}
+.flow-step .content h4{margin-bottom:4px}
+.flow-step .content p{margin-bottom:0;font-size:0.93rem}
+.flow-step .content .actor{font-family:ui-monospace,monospace;font-size:0.76rem;padding:2px 8px;border-radius:4px;margin-left:8px}
+.actor.orch{color:var(--blue);background:rgba(59,130,246,0.1)}
+.actor.work{color:var(--green);background:rgba(16,185,129,0.1)}
+.actor.adv{color:var(--red);background:rgba(239,68,68,0.1)}
+.actor.ver{color:var(--purple);background:rgba(167,139,250,0.1)}
+.table-wrap{overflow-x:auto;margin:24px 0;border:1px solid var(--border);border-radius:var(--radius)}
+table{width:100%;border-collapse:collapse;font-size:0.93rem}
+th,td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--border)}
+th{background:var(--bg-elev);font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-mut)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,0.015)}
+.box{border-radius:var(--radius-sm);padding:18px 22px;margin:22px 0;border-left:4px solid;font-size:0.93rem}
+.box.blue{background:rgba(59,130,246,0.08);border-color:var(--blue)}
+.box.green{background:rgba(16,185,129,0.08);border-color:var(--green)}
+.box.red{background:rgba(239,68,68,0.08);border-color:var(--red)}
+.box.amber{background:rgba(245,158,11,0.08);border-color:var(--amber)}
+.box.purple{background:rgba(167,139,250,0.08);border-color:var(--purple)}
+.accordion{margin:24px 0}
+.acc-item{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:10px;overflow:hidden}
+.acc-header{padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:0.95rem;transition:background .15s}
+.acc-header:hover{background:var(--bg-elev)}
+.acc-header .arrow{color:var(--text-mut);transition:transform .2s;font-size:0.8rem}
+.acc-item.open .acc-header .arrow{transform:rotate(90deg)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .3s ease;padding:0 20px}
+.acc-item.open .acc-body{max-height:400px;padding:0 20px 18px}
+.acc-body p{font-size:0.9rem;margin:0}
+.checklist{background:var(--bg-deep);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin:24px 0}
+.check-item{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;font-size:0.93rem;color:var(--text-sec);cursor:pointer}
+.check-item:last-child{margin-bottom:0}
+.check-item .cb{width:20px;height:20px;border:2px solid var(--border);border-radius:5px;flex-shrink:0;margin-top:1px;transition:all .15s;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:transparent}
+.check-item.done .cb{background:var(--green);border-color:var(--green);color:#0a0c0f}
+.check-item.done span{text-decoration:line-through;color:var(--text-mut)}
+.step-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin:28px 0}
+.step-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:border-color .2s,transform .2s}
+.step-card:hover{border-color:var(--cyan);transform:translateY(-2px)}
+.step-card .step-num{font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:700;color:var(--cyan);background:rgba(6,182,212,0.1);padding:3px 10px;border-radius:6px;display:inline-block;margin-bottom:12px}
+.step-card h4{font-size:1rem;font-weight:600;margin-bottom:8px}
+.step-card p{font-size:0.88rem;margin:0;line-height:1.55}
+.step-card .save{font-family:ui-monospace,monospace;font-size:0.76rem;color:var(--green-light);margin-top:10px;padding-top:10px;border-top:1px solid var(--border-sub)}
+.footer{border-top:1px solid var(--border);padding:40px 32px;text-align:center;color:var(--text-mut);font-size:0.85rem;max-width:1000px;margin:0 auto}
+.accent-blue{color:var(--blue-light)}
+.accent-green{color:var(--green-light)}
+.accent-red{color:var(--red-light)}
+.accent-purple{color:var(--purple)}
+.accent-amber{color:var(--amber)}
+.badge{display:inline-block;font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:600;padding:3px 10px;border-radius:999px;margin-left:8px}
+.badge.green{background:rgba(16,185,129,0.12);color:var(--green-light)}
+.badge.red{background:rgba(239,68,68,0.12);color:var(--red-light)}
+.badge.blue{background:rgba(59,130,246,0.12);color:var(--blue-light)}
+@media(max-width:700px){
+.hero h1{font-size:2.5rem}
+.nav{padding:0 16px}
+.nav .links{gap:14px}
+.nav .links a{font-size:0.78rem}
+.section,.visual{padding:0 20px}
+}
+</style>
+</head>
+<body>
+<nav class="nav">
+<div class="logo"><span>◆</span> Agentic Swarms</div>
+<div class="links">
+<a href="#problem">Problem</a>
+<a href="#arch">Architecture</a>
+<a href="#loop">OWA Loop</a>
+<a href="#impact">Impact</a>
+<a href="#optimize">Optimization</a>
+<a href="#pitfalls">Pitfalls</a>
+<a href="#audit">Audit</a>
+</div>
+<div class="meta">OWA v1.0 · Paper + Skill</div>
+</nav>
+
+<div class="hero">
+<h1>Architecting<br><span class="accent-blue">Multi-Agent</span> Swarms</h1>
+<p class="tag">Orchestration, cost optimization, and quality assurance for production-grade agentic coding. A field-tested OWA pipeline that cuts token cost 65% and wall-clock 50% — while improving code quality.</p>
+<div class="premise">📖 Based on the paper by <strong>Parvez Syed Mohamed</strong></div>
+</div>
+
+<div class="visual">
+<div class="label">The OWA Architecture</div>
+<svg class="arch-svg" viewBox="0 0 1000 440" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="bgG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0f1216"/><stop offset="100%" stop-color="#0a0c0f"/></linearGradient>
+<linearGradient id="oG" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#1e3a8a"/><stop offset="100%" stop-color="#1a3280"/></linearGradient>
+<linearGradient id="wG" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#064e3b"/><stop offset="100%" stop-color="#054530"/></linearGradient>
+<linearGradient id="aG" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#7f1d1d"/><stop offset="100%" stop-color="#6b1717"/></linearGradient>
+<linearGradient id="vG" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#4c1d95"/><stop offset="100%" stop-color="#3b1870"/></linearGradient>
+<filter id="gB" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="gP" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceGraphic" stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<marker id="aB" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#3b82f6"/></marker>
+<marker id="aG2" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#10b981"/></marker>
+<marker id="aR" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#ef4444"/></marker>
+<marker id="aP" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#a78bfa"/></marker>
+</defs>
+<rect x="0" y="0" width="1000" height="440" rx="18" fill="url(#bgG)" stroke="#1f242c" stroke-width="1"/>
+<!-- ORCHESTRATOR (top center) -->
+<rect x="300" y="24" width="400" height="90" rx="14" fill="url(#oG)" stroke="#3b82f6" stroke-width="2.5" filter="url(#gB)"/>
+<text x="500" y="50" text-anchor="middle" fill="#e4e7eb" font-size="17" font-weight="700" letter-spacing="0.08em">ORCHESTRATOR</text>
+<text x="500" y="68" text-anchor="middle" fill="#93c5fd" font-size="11" font-family="ui-monospace,monospace">Flagship Model · $0.50–3/call</text>
+<text x="500" y="86" text-anchor="middle" fill="#bfdbfe" font-size="10">Judgment · Dispatch · Merge — DOES NOT EDIT CODE</text>
+<text x="500" y="104" text-anchor="middle" fill="#fbbf24" font-size="9.5" font-family="ui-monospace,monospace" font-weight="600">ACCEPT · REJECT · DISPATCH FIX</text>
+<!-- WORKER (bottom left) -->
+<rect x="42" y="170" width="280" height="100" rx="14" fill="url(#wG)" stroke="#10b981" stroke-width="2.5" filter="url(#gB)"/>
+<text x="182" y="196" text-anchor="middle" fill="#e4e7eb" font-size="15" font-weight="700" letter-spacing="0.06em">WORKER</text>
+<text x="182" y="215" text-anchor="middle" fill="#6ee7b7" font-size="10.5" font-family="ui-monospace,monospace">Mid-Tier · Per-token</text>
+<text x="182" y="233" text-anchor="middle" fill="#4ade80" font-size="10">Code generation + mechanical execution</text>
+<text x="182" y="252" text-anchor="middle" fill="#6ee7b7" font-size="9.5" font-style="italic">Returns diffs + test results</text>
+<!-- ADVERSARY (bottom center) -->
+<rect x="360" y="170" width="280" height="100" rx="14" fill="url(#aG)" stroke="#ef4444" stroke-width="2.5" filter="url(#gB)"/>
+<text x="500" y="196" text-anchor="middle" fill="#e4e7eb" font-size="15" font-weight="700" letter-spacing="0.06em">ADVERSARY</text>
+<text x="500" y="215" text-anchor="middle" fill="#fca5a5" font-size="10.5" font-family="ui-monospace,monospace">Subscription · $0/call</text>
+<text x="500" y="233" text-anchor="middle" fill="#f87171" font-size="10">Destructive testing — tries to BREAK code</text>
+<text x="500" y="252" text-anchor="middle" fill="#fca5a5" font-size="9.5" font-style="italic">Writes aggressive failing tests</text>
+<!-- VERIFIER (bottom right) -->
+<rect x="678" y="170" width="280" height="100" rx="14" fill="url(#vG)" stroke="#a78bfa" stroke-width="2.5" filter="url(#gP)"/>
+<text x="818" y="196" text-anchor="middle" fill="#e4e7eb" font-size="15" font-weight="700" letter-spacing="0.06em">VERIFIER</text>
+<text x="818" y="215" text-anchor="middle" fill="#c4b5fd" font-size="10.5" font-family="ui-monospace,monospace">Flagship · 1× per block</text>
+<text x="818" y="233" text-anchor="middle" fill="#a78bfa" font-size="10">Integration assurance — fresh context</text>
+<text x="818" y="252" text-anchor="middle" fill="#c4b5fd" font-size="9.5" font-style="italic">Cross-subtask integration only</text>
+<!-- ARROWS -->
+<path d="M 400 114 L 220 170" fill="none" stroke="#3b82f6" stroke-width="2.2" marker-end="url(#aB)" opacity="0.9"/>
+<text x="280" y="145" text-anchor="middle" fill="#60a5fa" font-size="9.5" font-family="ui-monospace,monospace" font-weight="600">DISPATCH</text>
+<path d="M 250 170 L 380 114" fill="none" stroke="#10b981" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#aG2)" opacity="0.75"/>
+<text x="345" y="155" text-anchor="end" fill="#34d399" font-size="9" font-family="ui-monospace,monospace">CODE+TESTS</text>
+<path d="M 500 114 L 500 170" fill="none" stroke="#3b82f6" stroke-width="2.2" marker-end="url(#aB)" opacity="0.9"/>
+<text x="515" y="148" text-anchor="start" fill="#60a5fa" font-size="9.5" font-family="ui-monospace,monospace" font-weight="600">REVIEW</text>
+<path d="M 550 170 L 580 114" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#aR)" opacity="0.75"/>
+<text x="600" y="155" text-anchor="start" fill="#f87171" font-size="9" font-family="ui-monospace,monospace">BREAKS</text>
+<path d="M 700 114 L 790 170" fill="none" stroke="#a78bfa" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#aP)" opacity="0.6"/>
+<text x="780" y="145" text-anchor="middle" fill="#a78bfa" font-size="9" font-family="ui-monospace,monospace">BLOCK-END</text>
+<!-- GATE LAYER -->
+<rect x="42" y="310" width="916" height="60" rx="12" fill="#181b20" stroke="#f59e0b" stroke-width="1.5" opacity="0.85"/>
+<text x="500" y="335" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="700" letter-spacing="0.06em">PARALLEL GATE</text>
+<text x="500" y="355" text-anchor="middle" fill="#fde68a" font-size="10" font-family="ui-monospace,monospace">build · test · race · lint · security-scan — runs in parallel, cache cleared first</text>
+<!-- CAPTION -->
+<text x="500" y="410" text-anchor="middle" fill="#9ca3af" font-size="10" font-family="ui-monospace,monospace">The Orchestrator plans and merges. Workers execute. The Adversary breaks. The Verifier integrates. None trust each other.</text>
+</svg>
+</div>
+
+
+
+<!-- PROBLEM SECTION -->
+<section class="section" id="problem">
+<h2>The Problem</h2>
+<p class="lead">Single-agent coding assistants are great for demos. But when you try to ship real software with them, you hit three walls:</p>
+<div class="step-grid">
+<div class="step-card">
+<span class="step-num">WALL 1</span>
+<h4>Quality</h4>
+<p>One agent writing and reviewing its own code is a conflict of interest. It will rubber-stamp its own mistakes &mdash; the same blind spots that wrote the bug review it.</p>
+</div>
+<div class="step-card">
+<span class="step-num">WALL 2</span>
+<h4>Cost</h4>
+<p>Agentic workflows burn tokens on context bloat, cloud CI round-trips, and irrelevant tool schemas shipped on every API call. A 200-task plan isn't an asset &mdash; it's a liability.</p>
+</div>
+<div class="step-card">
+<span class="step-num">WALL 3</span>
+<h4>Failure Modes</h4>
+<p>Silent transport timeouts, stale cache false-greens, directory isolation breaches, asynchronous racing. These are misdiagnosed as "model failures" but are actually pipeline bugs.</p>
+</div>
+</div>
+<div class="box amber">
+<strong>The insight:</strong> The expensive model's best use isn't writing more code &mdash; it's deciding what <em>not</em> to build. Spend more time cutting the plan than generating it.
+</div>
+</section>
+
+<!-- ARCHITECTURE SECTION -->
+<section class="section" id="arch">
+<h2>The OWA Architecture</h2>
+<p class="lead">Assign agents <span class="accent-blue">opposing incentives</span>. One plans and dispatches. One writes code. One tries to break it. A fourth verifies integration at milestone boundaries. None trust each other.</p>
+
+<div class="agent-grid">
+<div class="agent-card">
+<div class="role orchestrator">ORCHESTRATOR</div>
+<h4>The Planner</h4>
+<div class="cost">Flagship model &middot; $0.50&ndash;3/call</div>
+<p>Highest reasoning. Maintains global state. Judges whether code is safe to merge. <strong>Does not edit code.</strong> Accept, reject, or dispatch a fix.</p>
+</div>
+<div class="agent-card">
+<div class="role worker">WORKER</div>
+<h4>The Builder</h4>
+<div class="cost">Mid-tier model &middot; per-token</div>
+<p>Polite, accurate code generation. Mechanical tool use. Writes code, runs tests locally, returns diffs + test results on an isolated branch.</p>
+</div>
+<div class="agent-card">
+<div class="role adversary">ADVERSARY</div>
+<h4>The Breaker</h4>
+<div class="cost">Free / subscription &middot; $0/call</div>
+<p>Zero incentive to be polite. Reads the Worker's code, writes aggressive failing tests, runs them. Reports breaks or "confirmed-safe." Catches what a 2am human reviewer rubber-stamps.</p>
+</div>
+<div class="agent-card">
+<div class="role verifier">VERIFIER</div>
+<h4>The Integrator</h4>
+<div class="cost">Flagship &middot; 1&times; per block</div>
+<p>Fresh context. Runs once per block &mdash; not per subtask. Cross-subtask integration assurance: verifies subtask A's output is correctly consumed by subtask B's input.</p>
+</div>
+</div>
+
+<div class="box blue">
+<strong>Why quality goes UP with more agents:</strong> The Adversary has no reason to be polite. It writes failing tests on purpose. Catches that a human reviewer would miss at 2am get caught by an agent whose entire identity is "find the break."
+</div>
+</section>
+
+<!-- OWA LOOP SECTION -->
+<section class="section" id="loop">
+<h2>The OWA Loop</h2>
+<p class="lead">For each subtask, run this loop. Per-subtask context stays tiny &mdash; ~5KB total. The entire block runs in ONE orchestrator session.</p>
+
+<div class="flow">
+<div class="flow-step">
+<div class="num">1</div>
+<div class="content">
+<h4>Dispatch Worker <span class="actor orch">Orchestrator</span></h4>
+<p>Orchestrator dispatches Worker on an isolated worktree/branch. Worker writes code, runs tests locally, commits. Outputs a structured summary: status, files changed, acceptance criteria met/unmet.</p>
+</div>
+</div>
+<div class="flow-step">
+<div class="num">2</div>
+<div class="content">
+<h4>Run Local Gate <span class="actor orch">Orchestrator</span></h4>
+<p>Build + test + race + lint + security-scan &mdash; run in <strong>PARALLEL</strong> (see Phase 5). Clear all tool caches first. Wall clock collapses to the slowest single component (~1 min).</p>
+</div>
+</div>
+<div class="flow-step">
+<div class="num">3</div>
+<div class="content">
+<h4>Gate Failed? &rarr; Fix Worker <span class="actor work">Worker</span></h4>
+<p>If gate fails, dispatch a fix Worker on the same branch. Repeat from step 2. No silent fallback &mdash; if the Orchestrator model is down, halt and surface to a human.</p>
+</div>
+</div>
+<div class="flow-step">
+<div class="num">4</div>
+<div class="content">
+<h4>Dispatch Adversary <span class="actor adv">Adversary</span></h4>
+<p>Adversary reads the code, writes aggressive failing tests, runs them, reports breaks (or "confirmed-safe"). It has ONLY terminal + file &mdash; it doesn't need a browser to break your code.</p>
+</div>
+</div>
+<div class="flow-step">
+<div class="num">5</div>
+<div class="content">
+<h4>Adversary Broke It? &rarr; Fix Worker <span class="actor work">Worker</span></h4>
+<p>If Adversary breaks the code, dispatch a fix Worker (same branch), repeat from step 2. The Orchestrator merges ONLY after the Adversary confirms safe.</p>
+</div>
+</div>
+<div class="flow-step">
+<div class="num">6</div>
+<div class="content">
+<h4>Merge Locally <span class="actor orch">Orchestrator</span></h4>
+<p>No PR, no push, no CI per subtask. Merge is local. Write an OWA record (worker summary, adversary report, fix history, merge commit, gate result) to a file &mdash; not inline in context.</p>
+</div>
+</div>
+<div class="flow-step">
+<div class="num">7</div>
+<div class="content">
+<h4>Prune &amp; Next <span class="actor orch">Orchestrator</span></h4>
+<p>Prune the worktree and branch. Move to the next subtask. At block completion (all subtasks merged): push once, create issues/PRs as a batch, run CI once.</p>
+</div>
+</div>
+</div>
+
+<div class="box green">
+<strong>Context efficiency:</strong> Worker JSON ~500 bytes &middot; Gate result ~200 bytes &middot; Adversary report ~1KB &middot; OWA record ~2KB (written to file). Total per subtask: ~5KB. If you're above 10KB, something is bloating it.
+</div>
+</section>
+
+<!-- IMPACT SECTION -->
+<section class="section" id="impact">
+<h2>Measured Impact</h2>
+<p class="lead">Validated across a multi-block build of a security-sensitive, containerized backend. Not benchmarks &mdash; real production work.</p>
+
+<div class="metrics">
+<div class="metric">
+<div class="num accent-green">~50%</div>
+<div class="label">Wall Clock</div>
+<div class="sub">per subtask (40-80 min &rarr; 20-45 min)</div>
+</div>
+<div class="metric">
+<div class="num accent-green">~65%</div>
+<div class="label">Token Cost</div>
+<div class="sub">per block ($15-40 &rarr; $5-15)</div>
+</div>
+<div class="metric">
+<div class="num accent-green">100%</div>
+<div class="label">Cloud CI</div>
+<div class="sub">quota exhaustion &rarr; 0 billed min</div>
+</div>
+<div class="metric">
+<div class="num accent-green">~99%</div>
+<div class="label">Context Footprint</div>
+<div class="sub">20-30K tokens &rarr; ~5KB per subtask</div>
+</div>
+<div class="metric">
+<div class="num accent-green">~89%</div>
+<div class="label">Verifier Calls</div>
+<div class="sub">per-subtask &rarr; once per block</div>
+</div>
+<div class="metric">
+<div class="num accent-green">~20KB</div>
+<div class="label">Prompt Overhead</div>
+<div class="sub">irrelevant schema &rarr; 0 per call</div>
+</div>
+</div>
+
+<div class="table-wrap">
+<table>
+<tr><th>Metric</th><th>Before</th><th>After</th><th>Saving</th></tr>
+<tr><td>Wall clock per subtask</td><td>40-80 min</td><td>20-45 min</td><td>~50%</td></tr>
+<tr><td>Token cost per block</td><td>$15-40</td><td>$5-15</td><td>~65%</td></tr>
+<tr><td>GitHub API calls per subtask</td><td>20+</td><td>0</td><td>100%</td></tr>
+<tr><td>Manual re-invocations per block</td><td>5</td><td>0</td><td>100%</td></tr>
+<tr><td>System prompt overhead per call</td><td>~20KB</td><td>0</td><td>~20KB</td></tr>
+<tr><td>Per-subtask context footprint</td><td>20-30K tokens</td><td>~5KB</td><td>~99%</td></tr>
+<tr><td>Verifier invocations per block</td><td>per-subtask</td><td>once per block</td><td>~89%</td></tr>
+</table>
+</div>
+</section>
+
+<!-- OPTIMIZATION SECTION -->
+<section class="section" id="optimize">
+<h2>Cost Optimization Levers</h2>
+<p class="lead">Six phases, each cutting cost or wall clock. Pull them in order &mdash; each compounds the last.</p>
+
+<div class="step-grid">
+<div class="step-card">
+<span class="step-num">PHASE 0</span>
+<h4>Strategic Scoping</h4>
+<p>Write your PRD on the strongest reasoning model. Ask it to decompose. Bounce through a different model to challenge &mdash; not approve. Force a rigid P0 MVP. Kill the rest. If you have 200 tasks, you failed Phase 0.</p>
+<div class="save">&rarr; 5-15 P0 subtasks, not 200</div>
+</div>
+<div class="step-card">
+<span class="step-num">PHASE 1</span>
+<h4>Model-to-Role Allocation</h4>
+<p>Match model nature to the job. Flagship for judgment (Orchestrator). Mid-tier for code gen (Worker). Free/subscription for breaking (Adversary). Flagship once per block (Verifier). No silent fallback &mdash; fail loudly.</p>
+<div class="save">&rarr; $0/call for the Adversary</div>
+</div>
+<div class="step-card">
+<span class="step-num">PHASE 3</span>
+<h4>Local-First Execution</h4>
+<p>No PRs per subtask. No push per subtask. No CI per subtask. Do everything locally. Push once at block-end. macOS Actions runners bill at 10&times; &mdash; self-hosting eliminated a 3,000-min quota exhaustion.</p>
+<div class="save">&rarr; ~50% wall clock, ~65% cost</div>
+</div>
+<div class="step-card">
+<span class="step-num">PHASE 4</span>
+<h4>Context Pruning</h4>
+<p>Every loaded tool, skill, and MCP schema is tokens you pay for on every call. Disable vision, video, TTS, browser, social tools for a backend build. Give the Adversary ONLY terminal + file. An unpruned orchestrator ships 20KB of irrelevant schema per call.</p>
+<div class="save">&rarr; ~250K tokens saved per block</div>
+</div>
+<div class="step-card">
+<span class="step-num">PHASE 5</span>
+<h4>Parallel Gates</h4>
+<p>Run build &middot; test &middot; race &middot; lint &middot; security-scan concurrently, not sequentially. Wall clock collapses from 3-5 min to ~1 min (the slowest single component). Split Docker e2e into 4-5 batches with unique network IDs.</p>
+<div class="save">&rarr; 3-5&times; faster gates</div>
+</div>
+<div class="step-card">
+<span class="step-num">PHASE 6</span>
+<h4>Block-End Verification</h4>
+<p>Run ONE Verifier pass at block-end &mdash; not per subtask. In our audit, a per-subtask Verifier caught 0 novel issues across 9 subtasks. It's theater that costs ~89% more API calls for zero value. Move it to block-end, fresh context.</p>
+<div class="save">&rarr; ~89% fewer Verifier calls</div>
+</div>
+</div>
+</section>
+
+<!-- PITFALLS SECTION -->
+<section class="section" id="pitfalls">
+<h2>Operational Pitfalls</h2>
+<p class="lead">These are misdiagnosed as "model failures" but are actually pipeline bugs. Click to expand each.</p>
+
+<div class="accordion">
+<div class="acc-item">
+<div class="acc-header">1. Transport timeouts vs agent failures <span class="arrow">&#9654;</span></div>
+<div class="acc-body"><p>A long-running Worker (10-30 min) may be silently killed by a 60-second transport-layer timeout, leaving the Orchestrator hanging. Symptom: the Worker silently disappears mid-task. Fix: use a transport that survives long runs (tmux sessions, or a runner with configurable timeout aligned to max task duration).</p></div>
+</div>
+<div class="acc-item">
+<div class="acc-header">2. Directory isolation breaches <span class="arrow">&#9654;</span></div>
+<div class="acc-body"><p>A Worker told to work in an isolated branch will cd back to the main repo if the main repo path is named anywhere in the prompt. Naming a location is an implicit instruction to navigate there. Fix: never name the main repo path in the Worker prompt &mdash; give it the worktree path only.</p></div>
+</div>
+<div class="acc-item">
+<div class="acc-header">3. Stale state validations <span class="arrow">&#9654;</span></div>
+<div class="acc-body"><p>A passing lint or test gate is invalid if it relies on cached state from a previous run. The gate "passes" on stale results and hides real issues. Fix: force cache invalidation at the start of every gate &mdash; delete the linter cache, test cache, and build artifact cache.</p></div>
+</div>
+<div class="acc-item">
+<div class="acc-header">4. Asynchronous racing <span class="arrow">&#9654;</span></div>
+<div class="acc-body"><p>If a fix task is injected after an integration failure, an auto-dispatcher may promote the next feature task in parallel. The fix and the next feature race; both touch the same files; one wins, one corrupts. Fix: require explicit synchronous blocks before initiating corrective branches.</p></div>
+</div>
+<div class="acc-item">
+<div class="acc-header">5. Self-reported "CI green" is a claim <span class="arrow">&#9654;</span></div>
+<div class="acc-body"><p>Agents commit locally and may forget to push. A closure comment saying "CI green" on a red remote is a real thing that happened. Fix: always verify on the remote branch state, not on the agent's self-report.</p></div>
+</div>
+<div class="acc-item">
+<div class="acc-header">6. Per-subtask Verifier is theater <span class="arrow">&#9654;</span></div>
+<div class="acc-body"><p>A Verifier run on every subtask catches what the Adversary already caught, or noise. It costs ~89% more API calls for zero novel value. Fix: Verifier runs once per block, at block-end, in a fresh context, focused on cross-subtask integration.</p></div>
+</div>
+<div class="acc-item">
+<div class="acc-header">7. Mega-session context burn <span class="arrow">&#9654;</span></div>
+<div class="acc-body"><p>Running all subtasks in one Orchestrator session without pruning causes context to grow to 100K+ tokens; the model re-processes the entire history on every call. This is the single largest token-waste event in a build. Fix: prune before each block; split across sessions at natural breakpoints if context still grows.</p></div>
+</div>
+<div class="acc-item">
+<div class="acc-header">8. Orchestrator edits code <span class="arrow">&#9654;</span></div>
+<div class="acc-body"><p>If the orchestrator has a file-patch tool, it will use it under pressure, bypassing the Adversary and the gate. Fix: strip the tool from the orchestrator profile at the tool-schema level. Prompts are suggestions; tool availability is a guarantee.</p></div>
+</div>
+<div class="acc-item">
+<div class="acc-header">9. No-fallback violation <span class="arrow">&#9654;</span></div>
+<div class="acc-body"><p>If the Orchestrator model is down and the pipeline silently falls back to a cheaper model, every judgment call (merge, scope, break assessment) degrades. Fix: hard-stop the pipeline on any assigned-model outage. Surface to a human. Never substitute.</p></div>
+</div>
+<div class="acc-item">
+<div class="acc-header">10. Duplicate CI gates <span class="arrow">&#9654;</span></div>
+<div class="acc-body"><p>If you run the same gate locally AND via CI on a self-hosted runner that IS your dev machine, you're paying the same compute twice plus the CI round-trip. Fix: in local-first mode, the local gate IS the CI. Push once at block-end; let CI run once as a safety net, not per subtask.</p></div>
+</div>
+</div>
+</section>
+
+<!-- AUDIT SECTION -->
+<section class="section" id="audit">
+<h2>Post-Build Audit</h2>
+<p class="lead">An agent's closure comment ("CI green, all tests pass") is a <span class="accent-red">claim</span>, not evidence. Verify against ground truth before declaring the block done. Click each item to check it off.</p>
+
+<div class="checklist">
+<div class="check-item">
+<div class="cb">&#10003;</div><span>Fix commits are present on the REMOTE, not just local. <code>git log origin/main</code> must show the fix.</span>
+</div>
+<div class="check-item">
+<div class="cb">&#10003;</div><span>CI is green on the remote main branch. Do not trust the closure comment &mdash; check the actual CI status.</span>
+</div>
+<div class="check-item">
+<div class="cb">&#10003;</div><span>E2E tests that CI skips (e.g., Docker-gated suites) actually pass locally on the merged code.</span>
+</div>
+<div class="check-item">
+<div class="cb">&#10003;</div><span>Any security suppressions (CVE ignores, lint exceptions) have factually accurate reasoning. "No fix available" is wrong if a fix exists.</span>
+</div>
+<div class="check-item">
+<div class="cb">&#10003;</div><span>The CI workflow actually runs the current block's gate, not a stale first-block gate.</span>
+</div>
+<div class="check-item">
+<div class="cb">&#10003;</div><span>Adversary and Verifier profiles have ONLY terminal + file &mdash; nothing else.</span>
+</div>
+<div class="check-item">
+<div class="cb">&#10003;</div><span>Pruning restored after block completion &mdash; skills/toolsets re-enabled for the next block.</span>
+</div>
+<div class="check-item">
+<div class="cb">&#10003;</div><span>Fast path defined for trivial changes (no Adversary/Verifier) &mdash; don't burn feature-level costs on one-line bumps.</span>
+</div>
+</div>
+
+<div class="box red">
+<strong>Reopen if skipped:</strong> After a block completes, audit every subtask issue for skipped work &mdash; CVE resolutions, e2e tests, adversary tests. Investigate solutions on the internet before closing. Verify e2e tests actually ran before closing issues.
+</div>
+</section>
+
+<!-- KEY PRINCIPLES -->
+<section class="section" id="principles">
+<h2>Key Principles</h2>
+<div class="step-grid">
+<div class="step-card">
+<span class="step-num">01</span>
+<h4>Cut, don't generate</h4>
+<p>The expensive model's best use is deciding what NOT to build. Spend more time cutting the plan than generating it.</p>
+</div>
+<div class="step-card">
+<span class="step-num">02</span>
+<h4>Opposing incentives raise quality</h4>
+<p>Adding agents with opposing incentives makes quality go UP. The Adversary has no reason to be polite.</p>
+</div>
+<div class="step-card">
+<span class="step-num">03</span>
+<h4>Orchestrator doesn't edit</h4>
+<p>Strip the file-patch tool from its profile. Every fix routes through a Worker and passes through the Adversary and the gate.</p>
+</div>
+<div class="step-card">
+<span class="step-num">04</span>
+<h4>Cloud round-trip is a tax</h4>
+<p>If your CI hardware is your dev machine, running gates locally and pushing at block-end saves 50% wall clock and 65% cost.</p>
+</div>
+<div class="step-card">
+<span class="step-num">05</span>
+<h4>Context is a budget</h4>
+<p>Every loaded tool, skill, and MCP schema is tokens you pay for on every call. Prune ruthlessly.</p>
+</div>
+<div class="step-card">
+<span class="step-num">06</span>
+<h4>Theater catches nothing</h4>
+<p>A per-subtask Verifier caught 0 novel issues across 9 subtasks. Move it to block-end; keep the Adversary per-subtask.</p>
+</div>
+<div class="step-card">
+<span class="step-num">07</span>
+<h4>Claims &ne; evidence</h4>
+<p>An agent's closure comment is a claim, not evidence. Always verify against the remote repository state.</p>
+</div>
+<div class="step-card">
+<span class="step-num">08</span>
+<h4>OWA is overkill for trivial work</h4>
+<p>Maintain a fast path for one-line config bumps and doc typos. Don't burn feature-level costs for zero assurance.</p>
+</div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+<p><strong>Orchestrating with Hermes Agent</strong> by Nous Research &mdash; the orchestration layer originally used to develop and test this workflow.</p>
+<p style="margin-top:12px">Paper: <em>Architecting Multi-Agent Swarms: Orchestration, Cost Optimization, and Quality Assurance</em> &middot; Parvez Syed Mohamed &middot; 2026</p>
+<p style="margin-top:8px;font-size:0.78rem">MIT License &middot; OWA v1.0 &middot; Field-tested, not benchmarked</p>
+</footer>
+
+<script>
+// Accordion
+document.querySelectorAll('.acc-header').forEach(h=>{
+h.addEventListener('click',()=>{
+const item=h.parentElement;
+const wasOpen=item.classList.contains('open');
+document.querySelectorAll('.acc-item').forEach(i=>i.classList.remove('open'));
+if(!wasOpen)item.classList.add('open');
+});
+});
+// Checklist toggle
+document.querySelectorAll('.check-item').forEach(c=>{
+c.addEventListener('click',()=>{
+c.classList.toggle('done');
+});
+});
+</script>
+</body>
+</html>
