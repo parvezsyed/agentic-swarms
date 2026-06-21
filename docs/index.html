@@ -28,11 +28,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro","Inter",system-ui,san
 .nav .meta{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:0.72rem;color:var(--text-mut)}
 .hero{padding:130px 32px 60px;max-width:1100px;margin:0 auto;text-align:center}
 .hero h1{font-size:3.6rem;font-weight:800;letter-spacing:-0.045em;line-height:1.05;margin-bottom:20px}
+.hero h1 .title-line{display:inline-flex;gap:0.18em;justify-content:center;flex-wrap:wrap}
 .hero .tag{font-size:1.3rem;color:var(--text-sec);max-width:720px;margin:0 auto 32px;line-height:1.4}
-.hero .premise{display:inline-flex;align-items:center;gap:12px;background:var(--bg-card);border:1px solid var(--border);padding:10px 22px;border-radius:999px;font-size:0.92rem;color:var(--text-sec)}
+.hero .premise{display:inline-flex;align-items:center;justify-content:center;gap:12px;background:var(--bg-card);border:1px solid var(--border);padding:10px 22px;border-radius:999px;font-size:0.92rem;color:var(--text-sec);max-width:100%}
 .hero .premise strong{color:var(--text)}
-.visual{max-width:1100px;margin:0 auto 70px;padding:0 32px}
+.visual{max-width:1180px;margin:0 auto 70px;padding:0 32px}
 .visual .label{text-align:center;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-mut);margin-bottom:16px}
+.mobile-arch{display:none}
 .section{max-width:1000px;margin:0 auto 80px;padding:0 32px}
 .section h2{font-size:1.85rem;font-weight:700;letter-spacing:-0.025em;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)}
 .section h3{font-size:1.15rem;font-weight:600;margin:32px 0 12px;color:var(--text)}
@@ -40,7 +42,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro","Inter",system-ui,san
 .section ul{padding-left:22px}
 .section li{margin-bottom:8px}
 .lead{font-size:1.1rem;color:var(--text);max-width:780px}
-.arch-svg{width:100%;max-width:980px;height:auto;display:block;margin:0 auto;filter:drop-shadow(0 20px 40px rgba(0,0,0,0.45))}
+.arch-svg{width:100%;max-width:1120px;height:auto;display:block;margin:0 auto;filter:drop-shadow(0 20px 40px rgba(0,0,0,0.45))}
 .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin:28px 0}
 .metric{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;text-align:center;transition:transform .2s,border-color .2s}
 .metric:hover{transform:translateY(-3px);border-color:var(--blue)}
@@ -114,11 +116,33 @@ tr:hover td{background:rgba(255,255,255,0.015)}
 .badge.red{background:rgba(239,68,68,0.12);color:var(--red-light)}
 .badge.blue{background:rgba(59,130,246,0.12);color:var(--blue-light)}
 @media(max-width:700px){
-.hero h1{font-size:2.5rem}
+.hero{padding:104px 20px 44px}
+.hero h1{font-size:2.35rem;letter-spacing:-0.04em}
+.hero h1 .title-line{display:flex;flex-direction:column;align-items:center;gap:0}
+.hero .tag{font-size:1.05rem;max-width:280px}
+.hero .premise{width:100%;max-width:280px;margin:0 auto;border-radius:14px;flex-wrap:wrap;line-height:1.35}
 .nav{padding:0 16px}
-.nav .links{gap:14px}
-.nav .links a{font-size:0.78rem}
+.nav .links,.nav .meta{display:none}
 .section,.visual{padding:0 20px}
+.visual{width:100%;max-width:none;margin:0 0 54px}
+.arch-svg{display:none}
+.mobile-arch{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;width:350px;max-width:100%;background:var(--bg-deep);border:1px solid var(--border);border-radius:14px;padding:16px}
+.mobile-node{min-width:0;border:1px solid var(--border);border-radius:10px;padding:14px;background:var(--bg-card)}
+.mobile-node h3{font-size:0.92rem;letter-spacing:0.05em;text-transform:uppercase;margin:0 0 4px}
+.mobile-node p{font-size:0.86rem;color:var(--text-sec);line-height:1.45;margin:0;overflow-wrap:break-word}
+.mobile-node.orch{border-color:var(--blue)}
+.mobile-node.orch h3{color:var(--blue-light)}
+.mobile-node.worker{border-color:var(--green)}
+.mobile-node.worker h3{color:var(--green-light)}
+.mobile-node.gate{border-color:var(--amber)}
+.mobile-node.gate h3{color:#fbbf24}
+.mobile-node.adv{border-color:var(--red)}
+.mobile-node.adv h3{color:var(--red-light)}
+.mobile-node.record{border-color:var(--cyan)}
+.mobile-node.record h3{color:#67e8f9}
+.mobile-node.ver{border-color:var(--purple)}
+.mobile-node.ver h3{color:var(--purple)}
+.mobile-arrow{text-align:center;color:var(--text-mut);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:0.78rem}
 }
 </style>
 </head>
@@ -138,113 +162,193 @@ tr:hover td{background:rgba(255,255,255,0.015)}
 </nav>
 
 <div class="hero">
-<h1>Architecting<br><span class="accent-blue">Multi-Agent</span> Swarms</h1>
+<h1>Architecting<br><span class="title-line"><span class="accent-blue">Multi-Agent</span><span>Swarms</span></span></h1>
 <p class="tag">Orchestration, cost optimization, and quality assurance for production-grade agentic coding. A field-tested OWA pipeline that cuts token cost 65% and wall-clock 50% — while improving code quality.</p>
 <div class="premise">📖 Based on the paper by <strong>Parvez Syed Mohamed</strong></div>
 </div>
 
 <div class="visual">
 <div class="label">The OWA Architecture</div>
-<svg class="arch-svg" viewBox="0 0 1000 560" xmlns="http://www.w3.org/2000/svg">
+<svg class="arch-svg" viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="owa-title owa-desc">
+<title id="owa-title">OWA Agentic Coding Loop</title>
+<desc id="owa-desc">A process diagram showing an Orchestrator dispatching a Worker, a local parallel gate, an Adversary review loop, local merge records, repeated subtasks, and a block-end Verifier.</desc>
 <defs>
-<linearGradient id="bgG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0f1216"/><stop offset="100%" stop-color="#0a0c0f"/></linearGradient>
-<linearGradient id="oG" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#1e3a8a"/><stop offset="100%" stop-color="#1a3280"/></linearGradient>
-<linearGradient id="wG" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#064e3b"/><stop offset="100%" stop-color="#054530"/></linearGradient>
-<linearGradient id="aG" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#7f1d1d"/><stop offset="100%" stop-color="#6b1717"/></linearGradient>
-<linearGradient id="vG" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#4c1d95"/><stop offset="100%" stop-color="#3b1870"/></linearGradient>
-<linearGradient id="gG" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#78350f"/><stop offset="100%" stop-color="#5c2a0c"/></linearGradient>
-<filter id="gB" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-<marker id="aBl" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,9 4,0 8" fill="#3b82f6"/></marker>
-<marker id="aGr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,9 4,0 8" fill="#10b981"/></marker>
-<marker id="aRd" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,9 4,0 8" fill="#ef4444"/></marker>
-<marker id="aPu" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,9 4,0 8" fill="#a78bfa"/></marker>
-<marker id="aAm" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,9 4,0 8" fill="#f59e0b"/></marker>
+<linearGradient id="archBg" x1="0" y1="0" x2="1200" y2="720" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#111827"/><stop offset="0.52" stop-color="#0d1117"/><stop offset="1" stop-color="#080a0d"/></linearGradient>
+<linearGradient id="orchFill" x1="440" y1="118" x2="760" y2="244" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#1e3a8a"/><stop offset="1" stop-color="#1d4ed8"/></linearGradient>
+<linearGradient id="workerFill" x1="70" y1="300" x2="330" y2="424" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#064e3b"/><stop offset="1" stop-color="#047857"/></linearGradient>
+<linearGradient id="gateFill" x1="450" y1="302" x2="750" y2="426" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#78350f"/><stop offset="1" stop-color="#a16207"/></linearGradient>
+<linearGradient id="advFill" x1="870" y1="300" x2="1130" y2="424" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#7f1d1d"/><stop offset="1" stop-color="#b91c1c"/></linearGradient>
+<linearGradient id="verifyFill" x1="870" y1="520" x2="1130" y2="630" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4c1d95"/><stop offset="1" stop-color="#6d28d9"/></linearGradient>
+<linearGradient id="recordFill" x1="270" y1="520" x2="550" y2="626" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#164e63"/><stop offset="1" stop-color="#155e75"/></linearGradient>
+<linearGradient id="nextFill" x1="590" y1="526" x2="810" y2="620" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#1f2937"/><stop offset="1" stop-color="#111827"/></linearGradient>
+<filter id="cardShadow" x="-18%" y="-18%" width="136%" height="136%"><feDropShadow dx="0" dy="16" stdDeviation="14" flood-color="#000000" flood-opacity="0.35"/></filter>
+<filter id="softGlow" x="-35%" y="-35%" width="170%" height="170%"><feGaussianBlur stdDeviation="18" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<marker id="arrowBlue" markerWidth="14" markerHeight="14" refX="11" refY="7" orient="auto" markerUnits="strokeWidth"><path d="M 2 2 L 12 7 L 2 12 Z" fill="#60A5FA"/></marker>
+<marker id="arrowGreen" markerWidth="14" markerHeight="14" refX="11" refY="7" orient="auto" markerUnits="strokeWidth"><path d="M 2 2 L 12 7 L 2 12 Z" fill="#34D399"/></marker>
+<marker id="arrowAmber" markerWidth="14" markerHeight="14" refX="11" refY="7" orient="auto" markerUnits="strokeWidth"><path d="M 2 2 L 12 7 L 2 12 Z" fill="#FBBF24"/></marker>
+<marker id="arrowRed" markerWidth="14" markerHeight="14" refX="11" refY="7" orient="auto" markerUnits="strokeWidth"><path d="M 2 2 L 12 7 L 2 12 Z" fill="#F87171"/></marker>
+<marker id="arrowViolet" markerWidth="14" markerHeight="14" refX="11" refY="7" orient="auto" markerUnits="strokeWidth"><path d="M 2 2 L 12 7 L 2 12 Z" fill="#A78BFA"/></marker>
+<style>
+.svg-title{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Arial,sans-serif;font-weight:800;letter-spacing:-0.02em;fill:#F8FAFC}
+.svg-subtitle{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Arial,sans-serif;font-weight:500;fill:#94A3B8}
+.card-title{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Arial,sans-serif;font-weight:800;letter-spacing:0.03em;fill:#F8FAFC}
+.card-copy{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Arial,sans-serif;font-weight:500;fill:#DDE7F2}
+.card-muted{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Arial,sans-serif;font-weight:500;fill:#B6C6D8}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-weight:700}
+.label-text{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:13px;font-weight:800;fill:#E5E7EB}
+.legend{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:13px;font-weight:600;fill:#94A3B8}
+.path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+</style>
 </defs>
 
-<rect x="0" y="0" width="1000" height="560" rx="18" fill="url(#bgG)" stroke="#1f242c" stroke-width="1"/>
+<rect x="0" y="0" width="1200" height="720" rx="24" fill="url(#archBg)" stroke="#1F2937" stroke-width="1.5"/>
+<circle cx="210" cy="156" r="142" fill="#1E40AF" opacity="0.10" filter="url(#softGlow)"/>
+<circle cx="1004" cy="198" r="160" fill="#7F1D1D" opacity="0.09" filter="url(#softGlow)"/>
+<circle cx="620" cy="622" r="160" fill="#0E7490" opacity="0.08" filter="url(#softGlow)"/>
 
-<!-- ORCHESTRATOR (top center) -->
-<rect x="300" y="20" width="400" height="95" rx="14" fill="url(#oG)" stroke="#3b82f6" stroke-width="2.5" filter="url(#gB)"/>
-<text x="500" y="48" text-anchor="middle" fill="#e4e7eb" font-size="17" font-weight="700" letter-spacing="0.08em">ORCHESTRATOR</text>
-<text x="500" y="68" text-anchor="middle" fill="#93c5fd" font-size="11" font-family="ui-monospace,monospace">Flagship model &#183; $0.50&#8211;3/call</text>
-<text x="500" y="86" text-anchor="middle" fill="#bfdbfe" font-size="10">Plans &#183; Dispatches &#183; Merges &#8212; DOES NOT EDIT CODE</text>
-<text x="500" y="104" text-anchor="middle" fill="#fbbf24" font-size="9.5" font-family="ui-monospace,monospace" font-weight="600">ACCEPT &#183; REJECT &#183; DISPATCH FIX</text>
+<!-- Header -->
+<text x="600" y="52" text-anchor="middle" class="svg-title" font-size="34">OWA Agentic Coding Loop</text>
+<text x="600" y="82" text-anchor="middle" class="svg-subtitle" font-size="16">Opposing agents, local gates, adversarial review, and block-end verification</text>
 
-<!-- WORKER (bottom left) -->
-<rect x="40" y="200" width="250" height="100" rx="14" fill="url(#wG)" stroke="#10b981" stroke-width="2.5" filter="url(#gB)"/>
-<text x="165" y="228" text-anchor="middle" fill="#e4e7eb" font-size="15" font-weight="700" letter-spacing="0.06em">WORKER</text>
-<text x="165" y="246" text-anchor="middle" fill="#6ee7b7" font-size="10.5" font-family="ui-monospace,monospace">Mid-tier &#183; per-token</text>
-<text x="165" y="264" text-anchor="middle" fill="#4ade80" font-size="10">Writes code + tests on isolated branch</text>
-<text x="165" y="282" text-anchor="middle" fill="#6ee7b7" font-size="9.5" font-style="italic">Returns: diffs + test results (JSON)</text>
+<!-- Forward progress arrows -->
+<path class="path" d="M 502 244 C 405 262 279 270 213 300" stroke="#60A5FA" stroke-width="4" marker-end="url(#arrowBlue)"/>
+<path class="path" d="M 330 362 C 374 362 406 362 450 362" stroke="#34D399" stroke-width="4" marker-end="url(#arrowGreen)"/>
+<path class="path" d="M 750 362 C 794 362 826 362 870 362" stroke="#FBBF24" stroke-width="4" marker-end="url(#arrowAmber)"/>
+<path class="path" d="M 994 424 C 928 500 656 552 550 573" stroke="#34D399" stroke-width="4" marker-end="url(#arrowGreen)"/>
+<path class="path" d="M 550 573 C 564 573 576 573 590 573" stroke="#06B6D4" stroke-width="4" marker-end="url(#arrowGreen)"/>
+<path class="path" d="M 810 573 C 830 573 850 573 870 573" stroke="#A78BFA" stroke-width="4" marker-end="url(#arrowViolet)"/>
+<path class="path" d="M 1000 630 C 1000 642 1000 650 1000 660" stroke="#A78BFA" stroke-width="4" marker-end="url(#arrowViolet)"/>
 
-<!-- ADVERSARY (bottom center) -->
-<rect x="375" y="200" width="250" height="100" rx="14" fill="url(#aG)" stroke="#ef4444" stroke-width="2.5" filter="url(#gB)"/>
-<text x="500" y="228" text-anchor="middle" fill="#e4e7eb" font-size="15" font-weight="700" letter-spacing="0.06em">ADVERSARY</text>
-<text x="500" y="246" text-anchor="middle" fill="#fca5a5" font-size="10.5" font-family="ui-monospace,monospace">Equivalent flagship &#183; $0/call</text>
-<text x="500" y="264" text-anchor="middle" fill="#f87171" font-size="10">Reads code &#183; writes aggressive failing tests</text>
-<text x="500" y="282" text-anchor="middle" fill="#fca5a5" font-size="9.5" font-style="italic">Returns: breaks found or &#8220;confirmed-safe&#8221;</text>
+<!-- Fix/report loops -->
+<path class="path" d="M 520 426 C 424 484 270 486 205 424" stroke="#FBBF24" stroke-width="3.5" stroke-dasharray="9 8" marker-end="url(#arrowAmber)"/>
+<path class="path" d="M 1000 300 C 900 236 328 236 218 300" stroke="#F87171" stroke-width="3.5" stroke-dasharray="9 8" marker-end="url(#arrowRed)"/>
+<path class="path" d="M 700 526 C 760 456 812 292 760 202" stroke="#60A5FA" stroke-width="3" stroke-dasharray="8 8" marker-end="url(#arrowBlue)" opacity="0.85"/>
+<path class="path" d="M 1018 520 C 1048 360 866 218 760 178" stroke="#A78BFA" stroke-width="3.5" stroke-dasharray="9 8" marker-end="url(#arrowViolet)" opacity="0.9"/>
 
-<!-- VERIFIER (bottom right) -->
-<rect x="710" y="200" width="250" height="100" rx="14" fill="url(#vG)" stroke="#a78bfa" stroke-width="2.5" filter="url(#gB)"/>
-<text x="835" y="228" text-anchor="middle" fill="#e4e7eb" font-size="15" font-weight="700" letter-spacing="0.06em">VERIFIER</text>
-<text x="835" y="246" text-anchor="middle" fill="#c4b5fd" font-size="10.5" font-family="ui-monospace,monospace">Flagship &#183; 1&#215; per block</text>
-<text x="835" y="264" text-anchor="middle" fill="#a78bfa" font-size="10">Cross-subtask integration &#8212; fresh context</text>
-<text x="835" y="282" text-anchor="middle" fill="#c4b5fd" font-size="9.5" font-style="italic">Runs once at block-end, NOT per subtask</text>
+<!-- Orchestrator -->
+<g filter="url(#cardShadow)">
+<rect x="440" y="118" width="320" height="126" rx="18" fill="url(#orchFill)" stroke="#60A5FA" stroke-width="2"/>
+<text x="600" y="153" text-anchor="middle" class="card-title" font-size="22">ORCHESTRATOR</text>
+<text x="600" y="181" text-anchor="middle" class="card-copy" font-size="15">Plans, dispatches, judges, merges</text>
+<rect x="503" y="200" width="194" height="26" rx="13" fill="#0F172A" stroke="#93C5FD" stroke-width="1" opacity="0.85"/>
+<text x="600" y="218" text-anchor="middle" class="mono" font-size="13" fill="#BFDBFE">DOES NOT EDIT CODE</text>
+</g>
 
-<!-- ============ ARROWS ============ -->
+<!-- Worker -->
+<g filter="url(#cardShadow)">
+<rect x="70" y="300" width="260" height="124" rx="18" fill="url(#workerFill)" stroke="#34D399" stroke-width="2"/>
+<text x="200" y="335" text-anchor="middle" class="card-title" font-size="21">WORKER</text>
+<text x="200" y="362" text-anchor="middle" class="card-copy" font-size="15">Writes code and tests</text>
+<text x="200" y="386" text-anchor="middle" class="card-muted" font-size="14">Isolated branch / worktree</text>
+<text x="200" y="407" text-anchor="middle" class="mono" font-size="13" fill="#BBF7D0">JSON summary + commit</text>
+</g>
 
-<!-- 1. Orchestrator -> Worker: DISPATCH (blue solid, down-left) -->
-<path d="M 335 115 L 155 200" fill="none" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#aBl)" opacity="0.9"/>
-<text x="210" y="138" text-anchor="middle" fill="#60a5fa" font-size="10.5" font-family="ui-monospace,monospace" font-weight="700">&#9312; DISPATCH</text>
-<text x="210" y="152" text-anchor="middle" fill="#93c5fd" font-size="9">&#8220;write code + tests&#8221;</text>
+<!-- Local gate -->
+<g filter="url(#cardShadow)">
+<rect x="450" y="302" width="300" height="124" rx="18" fill="url(#gateFill)" stroke="#FBBF24" stroke-width="2"/>
+<text x="600" y="337" text-anchor="middle" class="card-title" font-size="21">LOCAL PARALLEL GATE</text>
+<text x="600" y="365" text-anchor="middle" class="card-copy" font-size="15">build · test · lint · security · race</text>
+<text x="600" y="389" text-anchor="middle" class="card-muted" font-size="14">All checks run concurrently</text>
+<text x="600" y="410" text-anchor="middle" class="mono" font-size="13" fill="#FEF3C7">Caches cleared first</text>
+</g>
 
-<!-- 2. Worker -> Orchestrator: DIFFS + TEST RESULTS (green dashed, up-right) -->
-<path d="M 220 200 L 390 115" fill="none" stroke="#10b981" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#aGr)" opacity="0.85"/>
-<text x="335" y="170" text-anchor="middle" fill="#34d399" font-size="10" font-family="ui-monospace,monospace" font-weight="700">&#9313; DIFFS + TESTS</text>
+<!-- Adversary -->
+<g filter="url(#cardShadow)">
+<rect x="870" y="300" width="260" height="124" rx="18" fill="url(#advFill)" stroke="#F87171" stroke-width="2"/>
+<text x="1000" y="335" text-anchor="middle" class="card-title" font-size="21">ADVERSARY</text>
+<text x="1000" y="362" text-anchor="middle" class="card-copy" font-size="15">Tries to break the code</text>
+<text x="1000" y="386" text-anchor="middle" class="card-muted" font-size="14">Writes aggressive failing tests</text>
+<text x="1000" y="407" text-anchor="middle" class="mono" font-size="13" fill="#FECACA">Break report or confirmed safe</text>
+</g>
 
-<!-- 3. Orchestrator -> Gate: RUN GATE (amber solid, down) -->
-<path d="M 430 115 L 430 360" fill="none" stroke="#f59e0b" stroke-width="2.5" marker-end="url(#aAm)" opacity="0.85"/>
-<text x="430" y="135" text-anchor="middle" fill="#fbbf24" font-size="10.5" font-family="ui-monospace,monospace" font-weight="700">&#9314; RUN GATE</text>
-<text x="415" y="235" text-anchor="end" fill="#fde68a" font-size="9" font-style="italic">clears cache first</text>
+<!-- Records -->
+<g filter="url(#cardShadow)">
+<rect x="270" y="520" width="280" height="106" rx="18" fill="url(#recordFill)" stroke="#22D3EE" stroke-width="2"/>
+<text x="410" y="553" text-anchor="middle" class="card-title" font-size="20">MERGE + OWA RECORD</text>
+<text x="410" y="580" text-anchor="middle" class="card-copy" font-size="14">Gate result, break report,</text>
+<text x="410" y="601" text-anchor="middle" class="card-copy" font-size="14">fix history, merge commit</text>
+</g>
 
-<!-- Gate -> Orchestrator: PASS/FAIL (amber dashed, up) -->
-<path d="M 455 360 L 455 115" fill="none" stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="6,4" marker-end="url(#aAm)" opacity="0.6"/>
-<text x="470" y="235" text-anchor="start" fill="#fde68a" font-size="9" font-family="ui-monospace,monospace">PASS / FAIL</text>
+<!-- Next subtask -->
+<g filter="url(#cardShadow)">
+<rect x="590" y="526" width="220" height="94" rx="18" fill="url(#nextFill)" stroke="#64748B" stroke-width="2"/>
+<text x="700" y="561" text-anchor="middle" class="card-title" font-size="20">NEXT SUBTASK</text>
+<text x="700" y="589" text-anchor="middle" class="card-copy" font-size="14">Prune worktree</text>
+<text x="700" y="608" text-anchor="middle" class="card-muted" font-size="13">Repeat until block complete</text>
+</g>
 
-<!-- 4. Orchestrator -> Adversary: DISPATCH (blue solid, down) -->
-<path d="M 520 115 L 500 200" fill="none" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#aBl)" opacity="0.9"/>
-<text x="558" y="138" text-anchor="start" fill="#60a5fa" font-size="10.5" font-family="ui-monospace,monospace" font-weight="700">&#9315; DISPATCH</text>
-<text x="558" y="152" text-anchor="start" fill="#93c5fd" font-size="9">&#8220;try to break it&#8221;</text>
+<!-- Verifier -->
+<g filter="url(#cardShadow)">
+<rect x="870" y="520" width="260" height="110" rx="18" fill="url(#verifyFill)" stroke="#A78BFA" stroke-width="2"/>
+<text x="1000" y="554" text-anchor="middle" class="card-title" font-size="21">VERIFIER</text>
+<text x="1000" y="581" text-anchor="middle" class="card-copy" font-size="15">Fresh-context integration review</text>
+<text x="1000" y="604" text-anchor="middle" class="mono" font-size="13" fill="#DDD6FE">Runs once per block</text>
+</g>
 
-<!-- 5. Adversary -> Orchestrator: BREAK REPORT (red dashed, up) -->
-<path d="M 560 200 L 580 115" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#aRd)" opacity="0.85"/>
-<text x="630" y="170" text-anchor="start" fill="#f87171" font-size="10" font-family="ui-monospace,monospace" font-weight="700">&#9316; BREAK REPORT</text>
+<!-- Final badge -->
+<g>
+<rect x="902" y="658" width="196" height="34" rx="17" fill="#111827" stroke="#A78BFA" stroke-width="1.4"/>
+<text x="1000" y="680" text-anchor="middle" class="mono" font-size="13" fill="#EDE9FE">BLOCK READY: PUSH ONCE</text>
+</g>
 
-<!-- 6. Orchestrator -> Verifier: BLOCK-END (purple dashed, down-right) -->
-<path d="M 660 115 L 835 200" fill="none" stroke="#a78bfa" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#aPu)" opacity="0.75"/>
-<text x="775" y="138" text-anchor="middle" fill="#a78bfa" font-size="10.5" font-family="ui-monospace,monospace" font-weight="700">&#9317; BLOCK-END</text>
-<text x="775" y="152" text-anchor="middle" fill="#c4b5fd" font-size="9">&#8220;once per block&#8221;</text>
+<!-- Arrow labels -->
+<g>
+<rect x="302" y="253" width="168" height="30" rx="15" fill="#0F172A" stroke="#60A5FA" stroke-width="1.2"/>
+<text x="386" y="273" text-anchor="middle" class="label-text">1 DISPATCH TASK</text>
 
-<!-- Verifier -> Orchestrator: VERIFY PASS/FAIL (purple dashed, up-left) -->
-<path d="M 865 200 L 685 115" fill="none" stroke="#a78bfa" stroke-width="1.8" stroke-dasharray="6,4" marker-end="url(#aPu)" opacity="0.6"/>
-<text x="800" y="170" text-anchor="middle" fill="#c4b5fd" font-size="9" font-family="ui-monospace,monospace">VERIFY PASS/FAIL</text>
+<rect x="348" y="334" width="90" height="30" rx="15" fill="#0F172A" stroke="#34D399" stroke-width="1.2"/>
+<text x="393" y="354" text-anchor="middle" class="label-text">2 CODE</text>
 
-<!-- ============ PARALLEL GATE ============ -->
-<rect x="40" y="360" width="920" height="95" rx="12" fill="url(#gG)" stroke="#f59e0b" stroke-width="2" opacity="0.9"/>
-<text x="500" y="388" text-anchor="middle" fill="#fbbf24" font-size="14" font-weight="700" letter-spacing="0.06em">PARALLEL GATE &#8212; Step &#9314;</text>
-<text x="500" y="408" text-anchor="middle" fill="#fde68a" font-size="11" font-family="ui-monospace,monospace">build &#183; test &#183; race &#183; lint &#183; security-scan</text>
-<text x="500" y="425" text-anchor="middle" fill="#fde68a" font-size="10">All 5 run concurrently &#8212; wall clock = slowest component (~1 min). Cache cleared first.</text>
-<text x="500" y="443" text-anchor="middle" fill="#fca5a5" font-size="9.5" font-style="italic">Runs AFTER Worker returns code, BEFORE Adversary is dispatched</text>
+<rect x="780" y="334" width="76" height="30" rx="15" fill="#0F172A" stroke="#FBBF24" stroke-width="1.2"/>
+<text x="818" y="354" text-anchor="middle" class="label-text">3 PASS</text>
 
-<!-- ============ LOOP-BACK ============ -->
-<rect x="40" y="475" width="920" height="55" rx="10" fill="#181b20" stroke="#ef4444" stroke-width="1.5" opacity="0.8"/>
-<text x="500" y="498" text-anchor="middle" fill="#f87171" font-size="11" font-weight="600">&#8635; LOOP-BACK: If gate FAILS &#8594; fix Worker. If Adversary BREAKS code &#8594; fix Worker. Same branch, repeat from Step &#9314;.</text>
-<text x="500" y="516" text-anchor="middle" fill="#9ca3af" font-size="10">If gate passes + Adversary confirms safe &#8594; Orchestrator merges locally &#8594; next subtask. After all subtasks &#8594; Step &#9317; Verifier (block-end).</text>
+<rect x="322" y="463" width="144" height="30" rx="15" fill="#0F172A" stroke="#FBBF24" stroke-width="1.2"/>
+<text x="394" y="483" text-anchor="middle" class="label-text">FAIL: FIX</text>
 
-<!-- ============ LEGEND ============ -->
-<text x="40" y="550" fill="#6b7280" font-size="9" font-family="ui-monospace,monospace">&#9644; solid = dispatch &#160;&#160;&#160; &#9644; dashed = return &#160;&#160;&#160; &#9312;-&#9317; = per-subtask flow &#160;&#160;&#160; &#9317; = block-end only</text>
+<rect x="502" y="226" width="196" height="30" rx="15" fill="#0F172A" stroke="#F87171" stroke-width="1.2"/>
+<text x="600" y="246" text-anchor="middle" class="label-text">BREAK FOUND: FIX</text>
 
+<rect x="684" y="489" width="150" height="30" rx="15" fill="#0F172A" stroke="#34D399" stroke-width="1.2"/>
+<text x="759" y="509" text-anchor="middle" class="label-text">CONFIRMED SAFE</text>
+
+<rect x="814" y="541" width="48" height="30" rx="15" fill="#0F172A" stroke="#A78BFA" stroke-width="1.2"/>
+<text x="838" y="561" text-anchor="middle" class="label-text">ALL</text>
+
+<rect x="755" y="448" width="122" height="30" rx="15" fill="#0F172A" stroke="#60A5FA" stroke-width="1.2"/>
+<text x="816" y="468" text-anchor="middle" class="label-text">REPEAT</text>
+
+<rect x="918" y="244" width="148" height="30" rx="15" fill="#0F172A" stroke="#A78BFA" stroke-width="1.2"/>
+<text x="992" y="264" text-anchor="middle" class="label-text">VERIFY FAIL</text>
+</g>
+
+<!-- Cost and workflow chips -->
+<g>
+<rect x="52" y="650" width="184" height="34" rx="17" fill="#111827" stroke="#334155" stroke-width="1.2"/>
+<text x="144" y="672" text-anchor="middle" class="legend">No PR per subtask</text>
+<rect x="256" y="650" width="222" height="34" rx="17" fill="#111827" stroke="#334155" stroke-width="1.2"/>
+<text x="367" y="672" text-anchor="middle" class="legend">No cloud CI round-trip</text>
+<rect x="498" y="650" width="214" height="34" rx="17" fill="#111827" stroke="#334155" stroke-width="1.2"/>
+<text x="605" y="672" text-anchor="middle" class="legend">~5KB context/subtask</text>
+<rect x="732" y="650" width="150" height="34" rx="17" fill="#111827" stroke="#334155" stroke-width="1.2"/>
+<text x="807" y="672" text-anchor="middle" class="legend">1x Verifier</text>
+</g>
+
+<!-- Legend -->
+<text x="52" y="706" class="legend">Solid = forward progress · Dashed = report/fix loop · Violet = block-end only</text>
 </svg>
+<div class="mobile-arch" aria-label="OWA mobile architecture flow">
+<div class="mobile-node orch"><h3>Orchestrator</h3><p>Plans, dispatches, judges, and merges. Does not edit code.</p></div>
+<div class="mobile-arrow">1 dispatch scoped task</div>
+<div class="mobile-node worker"><h3>Worker</h3><p>Writes code and tests on an isolated branch or worktree.</p></div>
+<div class="mobile-arrow">2 run local gate</div>
+<div class="mobile-node gate"><h3>Local Parallel Gate</h3><p>Build, test, lint, security, and race checks run concurrently. Failures return to the Worker.</p></div>
+<div class="mobile-arrow">3 gate passed</div>
+<div class="mobile-node adv"><h3>Adversary</h3><p>Tries to break the code with aggressive failing tests. Breaks return to the Worker.</p></div>
+<div class="mobile-arrow">confirmed safe</div>
+<div class="mobile-node record"><h3>Merge + OWA Record</h3><p>Merge locally and write gate result, break report, fix history, and merge commit.</p></div>
+<div class="mobile-arrow">repeat until block complete</div>
+<div class="mobile-node ver"><h3>Verifier</h3><p>Runs once per block with fresh context, then the block is ready to push once.</p></div>
+</div>
 </div>
 
 
