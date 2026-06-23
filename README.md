@@ -216,6 +216,15 @@ This is an open-source project. Contributions welcome:
 
 Open an issue or submit a PR.
 
+## Support This Work
+
+If this pattern helps you ship better code, consider supporting continued development:
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/parvezsyed)
+
+---
+
+
 ## References
 
 - He, J., Treude, C., & Lo, D. (2025). *LLM-Based Multi-Agent Systems for Software Engineering: Literature Review, Vision and the Road Ahead.* ACM Transactions on Software Engineering and Methodology.
