@@ -119,9 +119,9 @@ orchestrator:
 worker:
   model: <your-best-code-model>            # code generation eg: GPT5.5 through codex
 adversary:
-  model: <your-best-testing-model> # destructive testing ($0) eg: Grok 4.1
+  model: <your-best-testing-model> # destructive testing ($0) eg: Grok 4.3
 verifier:
-  model: <your-highest-reasoning-model>    # integration assurance (1x/block) eg: Composer 2.5
+  model: <your-verifying-model>    # integration assurance (1x/block) eg: Deepseek-v4-pro
 ```
 
 ### 4. Run the OWA loop
