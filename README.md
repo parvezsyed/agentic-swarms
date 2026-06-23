@@ -115,13 +115,13 @@ and fill in the placeholders:
 
 ```yaml
 orchestrator:
-  model: <your-highest-reasoning-model>    # judgment, dispatch, merge
+  model: <your-highest-reasoning-model>    # judgment, dispatch, merge eg: GLM5.2
 worker:
-  model: <your-best-code-model>            # code generation
+  model: <your-best-code-model>            # code generation eg: GPT5.5 through codex
 adversary:
-  model: <your-free-or-subscription-model> # destructive testing ($0)
+  model: <your-best-testing-model> # destructive testing ($0) eg: Grok 4.1
 verifier:
-  model: <your-highest-reasoning-model>    # integration assurance (1x/block)
+  model: <your-highest-reasoning-model>    # integration assurance (1x/block) eg: Composer 2.5
 ```
 
 ### 4. Run the OWA loop
@@ -129,13 +129,13 @@ verifier:
 Follow the 7 phases in [`skill/SKILL.md`](skill/SKILL.md):
 
 0. **Strategic scoping** — cut the plan, don't generate it
-1. **Model allocation** — match model nature to role
+1. **Model allocation** — match model nature to role, see example above
 2. **OWA loop** — worker → gate → adversary → merge → record → prune
 3. **Local-first execution** — no PRs per subtask, push once at block-end
 4. **Context pruning** — disable irrelevant toolsets/skills/MCP
-5. **Parallel gates** — run build/test/lint concurrently
+5. **Parallel gates** — run build/test/lint concurrently, save time
 6. **Block-end verification** — one Verifier pass, fresh context
-7. **Post-build audit** — verify against remote, not closure comments
+7. **Post-build audit** — verify against remote, dont rely on closure comments
 
 ## Key Principles
 
